@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="WordButtonGrid">
+<!--        todo make height and width dynamic-->
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:elevation">1dp</item>
+        <item name="background">@android:color/transparent</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="layout_constraintDimensionRatio">1</item>
+    </style>
+</resources>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.task.wordament.wordBox.WordButtonData" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/root_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:duplicateParentState="true"
+        android:elevation="1dp">
+
+        <TextView
+            android:id="@+id/score_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:duplicateParentState="true"
+            android:elevation="1dp"
+            android:includeFontPadding="false"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="@{Integer.toString(data.score)}"
+            android:textAlignment="center"
+            android:textColor="@color/clementine"
+            android:textSize="12sp"
+            tools:text="123" />
+
+        <TextView
+            android:id="@+id/alphabet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:duplicateParentState="true"
+            android:fontFamily="@font/quicksand_bold"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:paddingVertical="0dp"
+            android:text="@{String.valueOf(data.alphabet).toUpperCase()}"
+            android:textAlignment="center"
+            android:textColor="@color/clementine"
+            android:textSize="48sp"
+            tools:text="321" />
+
+    </FrameLayout>
+
+</layout>
