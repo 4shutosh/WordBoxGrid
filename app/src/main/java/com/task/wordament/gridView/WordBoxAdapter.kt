@@ -17,13 +17,7 @@ class WordBoxAdapter : ListAdapter<WordButtonData, WordBoxHolder>(DiffCallBack()
     override fun onBindViewHolder(holder: WordBoxHolder, position: Int) {
         val item = getItem(position)
         holder.wordBoxButton.setData(item)
-        if (item.isSelected) {
-            holder.wordBoxButton.setSelected()
-        } else {
-            holder.wordBoxButton.deselect()
-        }
-        if (item.isCorrect) holder.wordBoxButton.setCorrect()
-        if (item.isInCorrect) holder.wordBoxButton.setInCorrect()
+        holder.wordBoxButton.setState(item.state)
     }
 }
 

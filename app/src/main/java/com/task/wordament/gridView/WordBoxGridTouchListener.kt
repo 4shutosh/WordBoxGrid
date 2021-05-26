@@ -4,7 +4,7 @@ import android.graphics.Rect
 import android.view.MotionEvent
 import android.view.MotionEvent.*
 import androidx.recyclerview.widget.RecyclerView
-import com.task.wordament.gridView.WordBoxGridReceiver
+import com.task.wordament.wordBox.WordBoxButtonState
 
 class WordBoxGridTouchListener(
     private val receiver: WordBoxGridReceiver
@@ -33,24 +33,25 @@ class WordBoxGridTouchListener(
                     if (lastDragged == currentPosition) return
 
                     if (selectedInOrder.isNotEmpty()) {
-                        if (selectedInOrder.contains(currentPosition) && selectedInOrder.lastIndex != currentPosition) {
-                            val flag =
-                                (selectedInOrder[selectedInOrder.lastIndex - 1] == currentPosition)
-                            if (flag) {
-                                receiver.setSelected(lastDragged, !receiver.isSelected(lastDragged))
-                                selectedInOrder.remove(lastDragged)
-                                lastDragged = currentPosition
-                                return
-                            } else {
-                                return
+                        if (selectedInOrder.contains(currentPosition)) {
+                            if (selectedInOrder[selectedInOrder.size - 1] != currentPosition) {
+                                val flag =
+                                    (selectedInOrder[selectedInOrder.lastIndex - 1] == currentPosition)
+                                if (flag) {
+                                    receiver.setSelected(lastDragged, WordBoxButtonState.DEFAULT)
+                                    selectedInOrder.remove(lastDragged)
+                                    lastDragged = currentPosition
+                                    return@onTouchEvent
+                                } else {
+                                    return@onTouchEvent
+                                }
                             }
                         }
                     }
                     // active part
                     lastDragged = currentPosition
                     selectedInOrder.add(lastDragged)
-//                    receiver.setSelected(lastDragged, !receiver.isSelected(lastDragged))
-                    receiver.setSelected(lastDragged, true)
+                    receiver.setSelected(lastDragged, WordBoxButtonState.SELECTED)
                     return
                 }
             }

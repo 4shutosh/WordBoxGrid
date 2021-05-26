@@ -9,6 +9,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.task.wordament.databinding.WordButtonGridBinding
 import com.task.wordament.trie.Trie
+import com.task.wordament.wordBox.WordBoxButtonState
+import com.task.wordament.wordBox.WordBoxButtonState.*
 import com.task.wordament.wordBox.WordButtonData
 
 /*WordBoxGrid : a custom view using WordBoxButton, observe the values to selectedString & selectedScore
@@ -45,8 +47,8 @@ class WordBoxGrid @JvmOverloads constructor(
         boxAdapter = WordBoxAdapter()
 
         val receiver = object : WordBoxGridReceiver {
-            override fun setSelected(index: Int, selected: Boolean) {
-                selectItem(index, selected)
+            override fun setSelected(index: Int, state: WordBoxButtonState) {
+                selectItem(index, state)
             }
 
             override fun actionRelease(list: ArrayList<Int>) {
@@ -57,10 +59,6 @@ class WordBoxGrid @JvmOverloads constructor(
                     selectedIndices.addAll(list)
                     appendAndCalculate()
                 }
-            }
-
-            override fun isSelected(index: Int): Boolean {
-                return dataList[index].isSelected
             }
 
         }
@@ -90,9 +88,9 @@ class WordBoxGrid @JvmOverloads constructor(
     }
 
     // set correct to the buttons of rView using the index provided
-    private fun selectItem(index: Int, selected: Boolean) {
-        if (dataList[index].isSelected != selected) {
-            dataList[index].isSelected = selected
+    private fun selectItem(index: Int, stateBox: WordBoxButtonState) {
+        if (dataList[index].state != stateBox) {
+            dataList[index].state = stateBox
             boxAdapter.notifyItemChanged(index)
         }
     }
@@ -117,13 +115,13 @@ class WordBoxGrid @JvmOverloads constructor(
         if (charTrie.contains(selectedString.value.toString())) {
             // make them green
             for (index in selectedIndices) {
-                dataList[index].isCorrect = true
+                dataList[index].state = CORRECT
                 boxAdapter.notifyItemChanged(index)
             }
         } else {
             // make them red
             for (index in selectedIndices) {
-                dataList[index].isInCorrect = true
+                dataList[index].state = INCORRECT
                 boxAdapter.notifyItemChanged(index)
             }
         }
@@ -135,9 +133,7 @@ class WordBoxGrid @JvmOverloads constructor(
 
     private fun resetSelections() {
         for (index in selectedIndices) {
-            dataList[index].isSelected = false
-            dataList[index].isInCorrect = false
-            dataList[index].isCorrect = false
+            dataList[index].state = DEFAULT
             boxAdapter.notifyItemChanged(index)
         }
         // can clear selectedIndices here

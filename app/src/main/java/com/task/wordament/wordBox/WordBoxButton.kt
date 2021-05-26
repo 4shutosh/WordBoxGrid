@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat
 import com.task.wordament.R
 import com.task.wordament.databinding.ItemWordButtonBinding
+import com.task.wordament.wordBox.WordBoxButtonState.*
 
 class WordBoxButton @JvmOverloads constructor(
     context: Context,
@@ -17,10 +17,19 @@ class WordBoxButton @JvmOverloads constructor(
     // todo make text size dynamic
 
     private var binding: ItemWordButtonBinding
+    private var isCorrect: Boolean = false
+    private var isIncorrect: Boolean = false
 
     init {
         val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         binding = ItemWordButtonBinding.inflate(inflater, this, true)
+    }
+
+    override fun onCreateDrawableState(extraSpace: Int): IntArray {
+        val drawableState = super.onCreateDrawableState(extraSpace + 1)
+        if (isCorrect) mergeDrawableStates(drawableState, WORD_BOX_STATUS_CORRECT)
+        if (isIncorrect) mergeDrawableStates(drawableState, WORD_BOX_STATUS_INCORRECT)
+        return drawableState
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -31,37 +40,40 @@ class WordBoxButton @JvmOverloads constructor(
         binding.data = data
     }
 
-    fun setCorrect() {
-        binding.rootFrameLayout.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_square_correct))
-        binding.alphabet.setTextColor(ContextCompat.getColor(context, R.color.white))
-        binding.scoreText.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_word_score_selected))
+    fun setState(state: WordBoxButtonState) {
+        when (state) {
+            DEFAULT -> {
+                isPressed = false
+                isCorrect = false
+                isIncorrect = false
+                isActivated = false
+            }
+            SELECTED -> {
+                isPressed = true
+
+                isCorrect = false
+                isIncorrect = false
+                isActivated = false
+            }
+            CORRECT -> {
+                isCorrect = true
+                isActivated = true
+
+                isPressed = false
+                isIncorrect = false
+            }
+            INCORRECT -> {
+                isIncorrect = true
+                isActivated = true
+
+                isCorrect = false
+                isPressed = false
+            }
+        }
     }
 
-    fun setInCorrect() {
-        binding.rootFrameLayout.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_square_incorrect))
-        binding.alphabet.setTextColor(ContextCompat.getColor(context, R.color.white))
-        binding.scoreText.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_word_score_selected))
-    }
-
-    fun setSelected() {
-        // make it yellow
-        binding.rootFrameLayout.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_square_selected))
-        binding.alphabet.setTextColor(ContextCompat.getColor(context, R.color.white))
-        binding.scoreText.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_word_score_selected))
-    }
-
-    fun deselect() {
-        // make it white again
-        binding.rootFrameLayout.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_square_unselected))
-        binding.alphabet.setTextColor(ContextCompat.getColor(context, R.color.clementine))
-        binding.scoreText.background =
-            (ContextCompat.getDrawable(context, R.drawable.dr_word_score_unselected))
+    companion object {
+        private val WORD_BOX_STATUS_CORRECT: IntArray = intArrayOf(R.attr.state_correct)
+        private val WORD_BOX_STATUS_INCORRECT: IntArray = intArrayOf(R.attr.state_incorrect)
     }
 }
